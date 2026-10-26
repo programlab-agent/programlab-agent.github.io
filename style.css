@@ -43,7 +43,7 @@ button.btn { font-family: inherit; letter-spacing: inherit; border: 0; cursor: p
 .lead { font-size: 20px; line-height: 1.55; margin: 0; }
 .tldr + h2 { margin-top: 32px; }
 
-h2 { font-size: 24px; line-height: 1.3; font-weight: 600; letter-spacing: -0.02em; margin: 56px 0 12px; scroll-margin-top: 24px; }
+h2 { font-size: 26px; line-height: 1.3; font-weight: 600; letter-spacing: -0.02em; margin: 56px 0 12px; scroll-margin-top: 24px; }
 h3 { font-size: 20px; line-height: 1.4; font-weight: 500; margin: 40px 0 8px; }
 p { margin: 18px 0; }
 b { font-weight: 600; }
@@ -86,7 +86,7 @@ footer { font-size: 13px; color: var(--muted); text-align: center; padding: 40px
   main { padding: 56px 20px 48px; }
   main > header { margin: 0 0 48px; }
   h1 { font-size: 34px; gap: 4px; }
-  h2 { font-size: 21px; margin-top: 44px; }
+  h2 { font-size: 22px; margin-top: 44px; }
   .lead { font-size: 18px; }
   .columns { flex-direction: column; gap: 32px; }
   table { font-size: 13.5px; }
