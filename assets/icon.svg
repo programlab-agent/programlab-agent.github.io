@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 428 428" width="428" height="428" role="img" aria-label="ProgramLab: a pixel agent climbing learning steps" fill="#000000">
+  <title>ProgramLab — Learning Steps</title>
+  <desc>Transparent-background vector artwork. All shapes and lettering are outlined paths; no embedded bitmap or external font is required.</desc>
+  <path d="M123 0H216V31H245V62H269V176H221V202H245V234H175V202H131V230H91V271H104V291H54V230H0V151H28V93H58V62H90V31H123ZM123 93H155V125H123Z M199 93H231V125H199Z" transform="translate(40,61)" fill-rule="evenodd" />
+  <path d="M265 202H348V305H175V255H265Z" transform="translate(40,61)" />
+</svg>
