@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=3a185ed9">
+<link rel="stylesheet" href="style.css?v=2a1aa783">
 </head>
 <body>
 <main>
@@ -39,7 +39,8 @@
 </nav>
 
 <section class="tldr">
-<p class="lead"><b>Can an agent learn to rebuild a whole program just by watching it run?</b> We introduce <b>ProgramLab</b>: 1,262 RL environments for agents learning to rebuild programs through trial-and-errors. Training Qwen3.6-35B-A3B on ProgramLab gains +10.3 points as a single agent and +7.9 points as a five-agent team on ProgramBench! We open-source the environments and recipes so everyone can try it!</p>
+<p class="lead">Give an agent a real program to play with, hide the code, and ask it to rebuild the whole thing from scratch. Even top agents struggles on this.</p>
+<p class="lead">ProgramLab gives agents 1,262 such programs to practice on. Unlock it here.</p>
 </section>
 
 <h2 id="results">Train one agent, or a whole team</h2>
@@ -73,17 +74,6 @@
 
 <h2 id="data">Data recipe</h2>
 
-<p><b>How we build ProgramLab.</b> We collect and filter open programmable projects from package registries (Homebrew, <a href="http://crates.io">crates.io</a>, <a href="http://pkg.go.dev">pkg.go.dev</a>) and GitHub which reliably produce a standalone executable. For each task, we use Codex CLI with GPT-5.5 to construct the environment following three steps below, each checked by an independent validator that does not trust the agent's own report:</p>
-<ol>
-<li><b>Build the reference.</b> Compile the project's main executable and record the build script.</li>
-<li><b>Synthesize behavioral tests.</b> Probe the executable and write tests that assert on its observable effects. A test is kept only if it passes on the reference, passes on repeated runs, and fails on a dummy binary that accepts any input. We design a <b>coverage-guided iteration</b> to produce high-quality and compact test suites that are suitable for RL.
-<aside class="note">
-<b>Coverage-guided iteration.</b> After each round, we measure line coverage of the reference on an instrumented build nd feed the coverage report back to the agent, which then writes tests for the behavior it has not yet exercised. The loop repeats until coverage stops improving, so each new test has to reach code that earlier tests missed.
-</aside>
-</li>
-<li><b>Package the cleanroom.</b> Ship an execute-only binary and its documentation; remove source, build caches, and version-control history.</li>
-</ol>
-
 <p><b>What's in ProgramLab?</b> ProgramLab contains 1,262 tasks from 1,262 distinct public repositories (566 Go, 416 Rust, 280 C/C++), with 187,208 hidden behavioral tests in total. The reference programs are substantial: the median project has an estimated 11.5K lines of source code, and about 150 exceed 100K lines. Each task contains:</p>
 <ul>
 <li><b>A reference executable</b>, built from a pinned commit and shipped execute-only.</li>
@@ -115,6 +105,17 @@
 <li><b>Fast to score.</b> Because the coverage-guided loop adds a test only when it reaches new code, suites stay small and every rollout is cheap to score.</li>
 </ul>
 
+<p><b>How we build ProgramLab.</b> We collect and filter open programmable projects from package registries (Homebrew, <a href="http://crates.io">crates.io</a>, <a href="http://pkg.go.dev">pkg.go.dev</a>) and GitHub which reliably produce a standalone executable. For each task, we use Codex CLI with GPT-5.5 to construct the environment following three steps below, each checked by an independent validator that does not trust the agent's own report:</p>
+<ol>
+<li><b>Build the reference.</b> Compile the project's main executable and record the build script.</li>
+<li><b>Synthesize behavioral tests.</b> Probe the executable and write tests that assert on its observable effects. A test is kept only if it passes on the reference, passes on repeated runs, and fails on a dummy binary that accepts any input. We design a <b>coverage-guided iteration</b> to produce high-quality and compact test suites that are suitable for RL.
+<aside class="note">
+<b>Coverage-guided iteration.</b> After each round, we measure line coverage of the reference on an instrumented build nd feed the coverage report back to the agent, which then writes tests for the behavior it has not yet exercised. The loop repeats until coverage stops improving, so each new test has to reach code that earlier tests missed.
+</aside>
+</li>
+<li><b>Package the cleanroom.</b> Ship an execute-only binary and its documentation; remove source, build caches, and version-control history.</li>
+</ol>
+
 <h2 id="rl">Learning to rebuild programs with RL</h2>
 
 <p>In each task, the agent works in a cleanroom container with a build toolchain and no network access. It can run the reference executable and read its documentation (usage text, help output, man pages), but it cannot read the source. It writes code in any language, plus a <code>compile.sh</code> that builds a candidate executable. <a href="https://programbench.com/">ProgramBench</a> (<a href="https://arxiv.org/abs/2605.03546">Yang et al., 2026</a>) makes this challenge concrete, and even state-of-the-art agents still struggle on it. We wanted to explore whether open models can learn this skill through RL on ProgramLab, as a single agent or as a whole team.</p>
@@ -133,7 +134,7 @@
 <li><b>Asynchronous training.</b> Generation and training overlap, with a cap on how stale samples can be.</li>
 </ul>
 
-<p><b>Multi-agent trajectory collection.</b> Because every worker's model calls pass through the same recording proxy, the team's rollout is collected like a single-agent one and scored once on the final program. All five agents share one policy, and every agent's segments carry the team's reward.</p>
+<p><b>Multi-agent training.</b> We train Qwen3.6-35B-A3B using an experimental variant of the Agensh harness with five agents: one leader designs test cases and delegates implementation tasks to four workers. Each rollout is executed in an isolated Docker environment, with Gitea serving as a shared coding workspace, Mattermost facilitating communication, and shared context synchronizing findings across agents. All five agents share the same Qwen3.6-35B-A3B model weights, which are optimized using a two-stage curriculum consisting of 50 training steps on easy tasks followed by 50 steps on medium tasks. Each rollout has a 30-minute execution budget, after which the Gitea repository is exported for reward calculation with ProgramLab.</p>
 
 <table>
 <caption>Run configurations</caption>
