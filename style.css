@@ -31,6 +31,7 @@ h1 img { height: 1.15em; width: auto; }
 .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
 .btn { font-size: 14px; color: var(--ink); text-decoration: none; background: var(--soft); border-radius: 999px; padding: 8px 16px; }
 .btn:hover { background: #e8e8e8; text-decoration: none; }
+button.btn { font-family: inherit; letter-spacing: inherit; border: 0; cursor: pointer; }
 
 .toc { display: none; }
 @media (min-width: 1280px) {
