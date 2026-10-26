@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ProgramLab: Train single and multi agents to rebuild programs with RL</title>
+<meta name="description" content="1,262 RL environments for agents learning to rebuild programs through trial and error. RL on ProgramLab gains +10.3 points as a single agent and +7.9 points as a five-agent team on ProgramBench.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ProgramLab: Train single and multi agents to rebuild programs with RL">
+<meta property="og:description" content="1,262 RL environments for agents learning to rebuild programs through trial and error.">
+<meta property="og:image" content="https://programlab.blog/assets/main_result.gif">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css?v=23f88658">
+</head>
+<body>
+<main>
+
+<header>
+<p class="meta">October 2026 · Research</p>
+<h1><img src="assets/icon.svg" width="428" height="428" alt="">ProgramLab</h1>
+<p class="sub">Train single and multi agents to rebuild programs with RL</p>
+<nav class="links">
+<a class="btn" href="#">🤗 Dataset ↗</a>
+<a class="btn" href="#">Code ↗</a>
+<button class="btn" id="copy-bib" type="button">BibTeX</button>
+</nav>
+</header>
+
+<nav class="toc">
+<a href="#results">Train one agent, or a whole team</a>
+<a href="#data">Data recipe</a>
+<a href="#rl">Learning to rebuild programs with RL</a>
+<a href="#related">Related work</a>
+<a href="#next">What's next</a>
+<a href="#bibtex">BibTeX</a>
+</nav>
+
+<section class="tldr">
+<p class="lead"><b>Can an agent learn to rebuild a whole program just by watching it run?</b> We introduce <b>ProgramLab</b>: 1,262 RL environments for agents learning to rebuild programs through trial-and-errors. Training Qwen3.6-35B-A3B on ProgramLab gains +10.3 points as a single agent and +7.9 points as a five-agent team on ProgramBench! We open-source the environments and recipes so everyone can try it!</p>
+<div class="stats">
+<div><b>1,262</b><span>RL environments from real Go, Rust and C/C++ projects</span></div>
+<div><b>+10.3</b><span>single agent on ProgramBench<br>13.7% → 24.0%</span></div>
+<div><b>+7.9</b><span>five-agent team on ProgramBench<br>17.2% → 25.0%</span></div>
+</div>
+</section>
+
+<h2 id="results">Train one agent, or a whole team</h2>
+
+<p>Using Qwen3.6-35B-A3B, we run RL on ProgramLab and evaluate on <a href="https://programbench.com/">ProgramBench</a>:</p>
+<ul>
+<li><b>Single agent:</b> 13.7% → 24.0% in Claude Code under a two-hour budget.</li>
+<li><b>A 5-Agent team:</b> 17.2% → 25.0% in under a 30-minute budget.</li>
+</ul>
+
+<p><b>Long-horizon agentic RL improves across harnesses.</b> Trained in GitHub Copilot CLI, the policy improves ProgramBench in all harnesses we test, including three unseen during training: Claude Code (+10.3), Codex CLI (+8.3), and mini-SWE-agent (+4.1). Under an extended six-hour budget, Claude Code goes from 19.0 to 27.6.</p>
+
+<figure>
+<img src="assets/main_result.gif" width="1385" height="585" alt="ProgramBench pass rate before and after RL across four harnesses">
+<figcaption><b>Figure 1.</b> ProgramBench pass rate of Qwen3.6-35B-A3B before and after RL on ProgramLab, with a two-hour budget. RL runs only in GitHub Copilot CLI, yet the gains carry over to all four harnesses.</figcaption>
+</figure>
+
+<p><b>Agent learns to write compilable programs during RL.</b> During RL training with 1024 rollouts per step(64 task * 16 rollout), rollouts grow from about 43 to 72 turns while mean training reward rises with 8× more rollouts ending with a compiling program (3.4% → 27.9%), under 2-hour rollout and 128k context budget.</p>
+
+<figure>
+<img src="assets/training_reward_turns.png" width="2051" height="597" alt="Training reward and turns per rollout during single-agent RL" loading="lazy">
+<figcaption><b>Figure 2.</b> Single-agent RL training on ProgramLab. Left: mean training reward at each step. Right: mean turns per rollout, which grow from 42.8 in the first ten steps to 72.0 in the last ten.</figcaption>
+</figure>
+
+<p><b>Multi-agent RL also works.</b> RL on ProgramLab raises a five-agent Qwen3.6-35B-A3B team from 17.2% to 25.0% (+7.9 points) on ProgramBench under a 30-minute budget.</p>
+
+<figure>
+<img src="assets/marl_eval.gif" width="1255" height="595" alt="Five-agent team pass rate during multi-agent RL" loading="lazy">
+<figcaption><b>Figure 3.</b> ProgramBench pass rate of the five-agent team during multi-agent RL, on all 200 tasks with a 30-minute budget.</figcaption>
+</figure>
+
+<h2 id="data">Data recipe</h2>
+
+<p><b>How we build ProgramLab.</b> We collect and filter open programmable projects from package registries (Homebrew, <a href="http://crates.io">crates.io</a>, <a href="http://pkg.go.dev">pkg.go.dev</a>) and GitHub which reliably produce a standalone executable. For each task, we use Codex CLI with GPT-5.5 to construct the environment following three steps below, each checked by an independent validator that does not trust the agent's own report:</p>
+<ol>
+<li><b>Build the reference.</b> Compile the project's main executable and record the build script.</li>
+<li><b>Synthesize behavioral tests.</b> Probe the executable and write tests that assert on its observable effects. A test is kept only if it passes on the reference, passes on repeated runs, and fails on a dummy binary that accepts any input. We design a <b>coverage-guided iteration</b> to produce high-quality and compact test suites that are suitable for RL.
+<aside class="note">
+<b>Coverage-guided iteration.</b> After each round, we measure line coverage of the reference on an instrumented build nd feed the coverage report back to the agent, which then writes tests for the behavior it has not yet exercised. The loop repeats until coverage stops improving, so each new test has to reach code that earlier tests missed.
+</aside>
+</li>
+<li><b>Package the cleanroom.</b> Ship an execute-only binary and its documentation; remove source, build caches, and version-control history.</li>
+</ol>
+
+<p><b>What's in ProgramLab?</b> ProgramLab contains 1,262 tasks from 1,262 distinct public repositories (566 Go, 416 Rust, 280 C/C++), with 187,208 hidden behavioral tests in total. The reference programs are substantial: the median project has an estimated 11.5K lines of source code, and about 150 exceed 100K lines. Each task contains:</p>
+<ul>
+<li><b>A reference executable</b>, built from a pinned commit and shipped execute-only.</li>
+<li><b>Documentation</b>: usage text, help output, man pages, and any fixtures the agent cannot create itself.</li>
+<li><b>A hidden test suite</b>: a median of 127 tests that run the agent's program and compare its observable behavior with the reference.
+<ul><li>The result is a small but thorough suite: a median of 127 tests (ProgramBench has 770) covers 76.6% of the reference's first-party lines, achieving over 90% for projects under 5K lines.</li></ul>
+</li>
+<li><b>Provenance</b>: the source repository and commit the executable was built from.</li>
+</ul>
+
+<p>Tasks ship in the ProgramBench format, so the official ProgramBench evaluator scores them without modification. Following ProgramBench's difficulty score, 205 tasks are easy, 889 medium, and 168 hard.</p>
+
+<div class="columns">
+<figure style="flex: 0.8125">
+<img src="assets/difficulty.png" width="897" height="765" alt="Task difficulty distribution" loading="lazy">
+<figcaption><b>Figure 5.</b> Task difficulty in ProgramLab under ProgramBench’s difficulty score: 205 easy, 889 medium, and 168 hard tasks.</figcaption>
+</figure>
+<figure style="flex: 1.1875">
+<img src="assets/coverage.png" width="1142" height="768" alt="Line coverage against project size" loading="lazy">
+<figcaption><b>Figure 6.</b> Line coverage of each hidden test suite against project size, falling from over 90% under 5K lines to 42.0% above 50K lines.</figcaption>
+</figure>
+</div>
+
+<h3>Why ProgramLab is suitable for RL</h3>
+<ul>
+<li><b>Graded.</b> The reward is the fraction of tests passed, so a partially working program earns partial credit. In our single-agent run, 95% of training tasks gave a nonzero reward at least once, so nearly every task provides learning signal from the start.</li>
+<li><b>Validated.</b> We drop tests that the reference fails in the cleanroom (4,047), that a no-op binary passes (1,738), or that are flaky (550). Every released task scores 1 with the reference and 0 with an empty submission.</li>
+<li>Prevent hacking</li>
+<li><b>Fast to score.</b> Because the coverage-guided loop adds a test only when it reaches new code, suites stay small and every rollout is cheap to score.</li>
+</ul>
+
+<h2 id="rl">Learning to rebuild programs with RL</h2>
+
+<p>In each task, the agent works in a cleanroom container with a build toolchain and no network access. It can run the reference executable and read its documentation (usage text, help output, man pages), but it cannot read the source. It writes code in any language, plus a <code>compile.sh</code> that builds a candidate executable. <a href="https://programbench.com/">ProgramBench</a> (<a href="https://arxiv.org/abs/2605.03546">Yang et al., 2026</a>) makes this challenge concrete, and even state-of-the-art agents still struggle on it. We wanted to explore whether open models can learn this skill through RL on ProgramLab, as a single agent or as a whole team.</p>
+
+<figure>
+<img src="assets/overview.gif" width="2047" height="875" alt="Overview of ProgramLab task construction and RL" loading="lazy">
+<figcaption><b>Figure 4.</b> Overview of ProgramLab. (a) Agents turn public Go, Rust, and C/C++ projects into packaged tasks with hidden tests. (b) During RL, the coding agent probes the locked executable in a cleanroom, writes a new program, and is rewarded by the fraction of hidden tests it passes.</figcaption>
+</figure>
+
+<p>For scoring, the candidate is rebuilt in a fresh container and run against a hidden test suite. The reward is the fraction of tests passed, <span class="math"><i>r</i> = |<i>T</i><sub>pass</sub>| / |<i>T</i>| ∈ [0, 1]</span>.</p>
+
+<p><b>Trajectory collection for black-box harnesses.</b> We run off-the-shelf harnesses as the policy's interface.</p>
+<ul>
+<li><b>Recording proxy.</b> The cleanroom allows only loopback networking, so every model call, from every agent, goes through a proxy that logs prompt tokens, sampled tokens, and log-probabilities. Calls are merged into training sequences by prefix matching, and only sampled tokens are trained.</li>
+<li><b>Context compaction.</b> When the harness summarizes its history, a new training segment starts. The summarization call is trained too.</li>
+<li><b>Asynchronous training.</b> Generation and training overlap, with a cap on how stale samples can be.</li>
+</ul>
+
+<p><b>Multi-agent trajectory collection.</b> Because every worker's model calls pass through the same recording proxy, the team's rollout is collected like a single-agent one and scored once on the final program. All five agents share one policy, and every agent's segments carry the team's reward.</p>
+
+<table>
+<caption>Run configurations</caption>
+<thead><tr><th></th><th>Single agent</th><th>Multi agents</th></tr></thead>
+<tbody>
+<tr><td>Model</td><td>Qwen3.6-35B-A3B</td><td>Qwen3.6-35B-A3B</td></tr>
+<tr><td>Training harness</td><td>GitHub Copilot CLI</td><td>Agensh with 5 agents running GitHub Copilot CLI</td></tr>
+<tr><td>Rollouts per task</td><td>16</td><td>4</td></tr>
+<tr><td>Training budget per rollout</td><td>2 hours, 128K context</td><td>30 minutes, 256K context</td></tr>
+</tbody>
+</table>
+
+<h2 id="related">Related work</h2>
+<ul class="refs">
+<li><b>Building programs from scratch:</b> <a href="https://arxiv.org/abs/2605.03546">ProgramBench</a>, <a href="https://arxiv.org/abs/2412.01769">Commit0</a>, <a href="https://arxiv.org/abs/2512.12730">NL2Repo-Bench</a>, <a href="https://arxiv.org/abs/2605.07122">RepoZero</a>, <a href="https://arxiv.org/abs/2609.38269">Zero2Repo</a>.</li>
+<li><b>Training environments for coding agents:</b> <a href="https://arxiv.org/abs/2412.21139">SWE-Gym</a>, <a href="https://openreview.net/forum?id=7evvwwdo3z">R2E-Gym</a>, <a href="https://arxiv.org/abs/2504.21798">SWE-smith</a>, <a href="https://arxiv.org/abs/2607.27146">MindForge</a>, <a href="https://arxiv.org/abs/2605.25624">CUA-Gym</a>.</li>
+<li><b>Agentic RL:</b> <a href="https://arxiv.org/abs/2511.16108">SkyRL-Agent</a>, <a href="https://arxiv.org/abs/2508.03501">Golubev et al.</a>, <a href="https://arxiv.org/abs/2601.16206">LLM-in-Sandbox</a>, <a href="https://arxiv.org/abs/2505.24298">AReaL</a>, <a href="https://arxiv.org/abs/2509.13313">ReSum</a>, <a href="https://arxiv.org/abs/2510.06727">SUPO</a>, <a href="https://arxiv.org/abs/2508.03680">Agent Lightning</a>.</li>
+<li><b>Multi-agent harnesses and RL:</b> <a href="https://arxiv.org/abs/2609.26781">Agensh</a>. <span class="todo">[TODO: add multi-agent RL papers, ask Zhihao]</span></li>
+</ul>
+
+<h2 id="next">What's next</h2>
+<p><b>Open-sourcing the data and training pipeline.</b> The data synthesis pipeline will follow, so others can extend ProgramLab, along with our RL training infrastructure, rl-bridge <span class="todo">[TBD: link]</span>. We expect to release both in November.</p>
+
+<h2 id="bibtex">BibTeX</h2>
+<pre><code>@misc{programlab2026,
+  title={ProgramLab: Train single and multi agents to rebuild programs},
+  author={Yao Tang and Daixuan Cheng and Li Dong and Zhihao Zhan and Shaohan Huang and Jiatao Gu and Furu Wei},
+  howpublished={Blog Post},
+  url={https://programlab.blog/},
+  year={2026}
+}</code></pre>
+
+</main>
+<footer>© 2026 ProgramLab</footer>
+<script>
+const tocLinks = [...document.querySelectorAll('.toc a')];
+const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && tocLinks.forEach(a => a.classList.toggle('on', a.hash === '#' + e.target.id))), { rootMargin: '0px 0px -70% 0px' });
+document.querySelectorAll('h2[id]').forEach(h => io.observe(h));
+document.getElementById('copy-bib').onclick = e => navigator.clipboard.writeText(document.querySelector('#bibtex + pre').innerText).then(() => { e.target.textContent = 'Copied ✓'; setTimeout(() => e.target.textContent = 'BibTeX', 1500); });
+</script>
+<script>document.fonts.ready.then(() => { const e = document.querySelector('.sub'); document.title = 'sub=' + Math.round(e.scrollWidth) + ' box=' + Math.round(e.clientWidth) + ' vw=' + innerWidth + ' fs=' + getComputedStyle(e).fontSize; });</script></body>
+</html>
