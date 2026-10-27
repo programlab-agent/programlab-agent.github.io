@@ -60,15 +60,13 @@ figure { margin: 48px 0; }
 figure img { display: block; width: 100%; height: auto; }
 figcaption { font-size: 14px; line-height: 1.6; color: var(--muted); margin-top: 14px; }
 figcaption b { color: var(--ink); font-weight: 500; }
-.columns { display: flex; gap: 32px; align-items: flex-start; margin: 48px 0; }
-.columns figure { margin: 0; min-width: 0; }
 main > figure.narrow { margin-left: 0; margin-right: 0; }
 main > figure.w80 { width: 80%; margin-left: auto; margin-right: auto; }
 @media (min-width: 960px) {
   main > figure.w80 { width: calc((100% + 192px) * 0.8); margin-left: calc((100% - (100% + 192px) * 0.8) / 2); margin-right: 0; }
 }
 @media (min-width: 960px) {
-  main > figure, .columns { margin-left: -96px; margin-right: -96px; }
+  main > figure { margin-left: -96px; margin-right: -96px; }
 }
 
 .math { font-family: "Times New Roman", serif; font-size: 1.05em; white-space: nowrap; letter-spacing: 0; }
@@ -92,6 +90,5 @@ footer { font-size: 13px; color: var(--muted); text-align: center; padding: 40px
   h1 img { height: 44px; }
   h2 { font-size: 22px; margin-top: 44px; }
   .lead { font-size: 18px; }
-  .columns { flex-direction: column; gap: 32px; }
   table { font-size: 13.5px; }
 }

@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=2fc677b4">
+<link rel="stylesheet" href="style.css?v=f97fbcca">
 </head>
 <body>
 <main>
@@ -85,16 +85,10 @@
 
 <p>Tasks ship in the ProgramBench format, so the official ProgramBench evaluator scores them without modification. Following ProgramBench's difficulty score, 205 tasks are easy, 889 medium, and 168 hard.</p>
 
-<div class="columns">
-<figure style="flex: 0.8125">
-<img src="assets/difficulty.png" width="897" height="765" alt="Task difficulty distribution" loading="lazy">
-<figcaption><b>Figure 5.</b> Task difficulty in ProgramLab under ProgramBench’s difficulty score: 205 easy, 889 medium, and 168 hard tasks.</figcaption>
-</figure>
-<figure style="flex: 1.1875">
+<figure class="narrow">
 <img src="assets/coverage.png" width="1142" height="768" alt="Line coverage against project size" loading="lazy">
-<figcaption><b>Figure 6.</b> Line coverage of each hidden test suite against project size, falling from over 90% under 5K lines to 42.0% above 50K lines.</figcaption>
+<figcaption><b>Figure 4.</b> Line coverage of each hidden test suite against project size, falling from over 90% under 5K lines to 42.0% above 50K lines.</figcaption>
 </figure>
-</div>
 
 <h3>Why ProgramLab is suitable for RL</h3>
 <ul>
@@ -117,7 +111,7 @@
 
 <figure>
 <img src="assets/overview.gif" width="2047" height="875" alt="Overview of ProgramLab task construction and RL" loading="lazy">
-<figcaption><b>Figure 4.</b> Overview of ProgramLab. (a) Agents turn public Go, Rust, and C/C++ projects into packaged tasks with hidden tests. (b) During RL, the coding agent probes the locked executable in a cleanroom, writes a new program, and is rewarded by the fraction of hidden tests it passes.</figcaption>
+<figcaption><b>Figure 5.</b> Overview of ProgramLab. (a) Agents turn public Go, Rust, and C/C++ projects into packaged tasks with hidden tests. (b) During RL, the coding agent probes the locked executable in a cleanroom, writes a new program, and is rewarded by the fraction of hidden tests it passes.</figcaption>
 </figure>
 
 <h2 id="rl">Agentic RL in ProgramLab</h2>
