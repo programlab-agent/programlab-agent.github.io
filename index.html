@@ -31,7 +31,7 @@
 <nav class="toc">
 <a href="#results">Train one agent, or a whole team</a>
 <a href="#data">Data recipe</a>
-<a href="#rl">Learning to rebuild programs with RL</a>
+<a href="#rl">Agentic RL in ProgramLab</a>
 <a href="#related">Related work</a>
 <a href="#next">What's next</a>
 <a href="#bibtex">BibTeX</a>
@@ -115,14 +115,14 @@
 <li><b>Package the cleanroom.</b> Ship an execute-only binary and its documentation; remove source, build caches, and version-control history.</li>
 </ol>
 
-<h2 id="rl">Learning to rebuild programs with RL</h2>
-
-<p>In each task, the agent works in a cleanroom container with a build toolchain and no network access. It can run the reference executable and read its documentation (usage text, help output, man pages), but it cannot read the source. It writes code in any language, plus a <code>compile.sh</code> that builds a candidate executable. <a href="https://programbench.com/">ProgramBench</a> (<a href="https://arxiv.org/abs/2605.03546">Yang et al., 2026</a>) makes this challenge concrete, and even state-of-the-art agents still struggle on it. We wanted to explore whether open models can learn this skill through RL on ProgramLab, as a single agent or as a whole team.</p>
-
 <figure>
 <img src="assets/overview.gif" width="2047" height="875" alt="Overview of ProgramLab task construction and RL" loading="lazy">
 <figcaption><b>Figure 4.</b> Overview of ProgramLab. (a) Agents turn public Go, Rust, and C/C++ projects into packaged tasks with hidden tests. (b) During RL, the coding agent probes the locked executable in a cleanroom, writes a new program, and is rewarded by the fraction of hidden tests it passes.</figcaption>
 </figure>
+
+<h2 id="rl">Agentic RL in ProgramLab</h2>
+
+<p>In each task, the agent works in a cleanroom container with a build toolchain and no network access. It can run the reference executable and read its documentation (usage text, help output, man pages), but it cannot read the source. It writes code in any language, plus a <code>compile.sh</code> that builds a candidate executable. <a href="https://programbench.com/">ProgramBench</a> (<a href="https://arxiv.org/abs/2605.03546">Yang et al., 2026</a>) makes this challenge concrete.</p>
 
 <p>For scoring, the candidate is rebuilt in a fresh container and run against a hidden test suite. The reward is the fraction of tests passed, <span class="math"><i>r</i> = |<i>T</i><sub>pass</sub>| / |<i>T</i>| ∈ [0, 1]</span>.</p>
 
