@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=cdb9aa00">
+<link rel="stylesheet" href="style.css?v=bf577321">
 </head>
 <body>
 <main>
@@ -54,21 +54,21 @@
 <p><b>Long-horizon agentic RL improves across harnesses.</b> Trained in GitHub Copilot CLI, the policy improves ProgramBench in all harnesses we test, including three unseen during training: Claude Code (+10.3), Codex CLI (+8.3), and mini-SWE-agent (+4.1). Under an extended six-hour budget, Claude Code goes from 19.0 to 27.6.</p>
 
 <figure class="narrow">
-<img src="assets/main_result.gif" width="1385" height="585" alt="ProgramBench pass rate before and after RL across four harnesses">
+<img src="assets/main_result.gif?v=a1bc9901" width="1421" height="586" alt="ProgramBench pass rate before and after RL across four harnesses">
 <figcaption><b>Figure 1.</b> ProgramBench pass rate of Qwen3.6-35B-A3B before and after RL on ProgramLab, with a two-hour budget. RL runs only in GitHub Copilot CLI, yet the gains carry over to all four harnesses.</figcaption>
 </figure>
 
 <p><b>Agent learns to write compilable programs during RL.</b> During RL training with 1024 rollouts per step(64 task * 16 rollout), rollouts grow from about 43 to 72 turns while mean training reward rises with 8× more rollouts ending with a compiling program (3.4% → 27.9%), under 2-hour rollout and 128k context budget.</p>
 
 <figure>
-<img src="assets/training_reward_turns.png" width="2051" height="597" alt="Training reward and turns per rollout during single-agent RL" loading="lazy">
+<img src="assets/training_reward_turns.png?v=0ce5b56a" width="2052" height="602" alt="Training reward and turns per rollout during single-agent RL" loading="lazy">
 <figcaption><b>Figure 2.</b> Single-agent RL training on ProgramLab. <b>Left:</b> mean training reward at each step. <b>Right:</b> mean turns per rollout at each step.</figcaption>
 </figure>
 
 <p><b>Multi-agent RL also works.</b> RL on ProgramLab raises a five-agent Qwen3.6-35B-A3B team from 17.2% to 25.0% (+7.9 points) on ProgramBench under a 30-minute budget.</p>
 
 <figure class="w80">
-<img src="assets/marl_eval.gif" width="1255" height="595" alt="Five-agent team pass rate during multi-agent RL" loading="lazy">
+<img src="assets/marl_eval.gif?v=44e8ecb9" width="1273" height="593" alt="Five-agent team pass rate during multi-agent RL" loading="lazy">
 <figcaption><b>Figure 3.</b> ProgramBench pass rate of the five-agent team during multi-agent RL, on all 200 tasks with a 30-minute budget.</figcaption>
 </figure>
 
@@ -88,12 +88,12 @@
 
 <figure class="small">
 <div class="plot">
-<img src="assets/coverage.png?v=9880ba70" width="1522" height="1024" alt="Line coverage against project size, with three example projects" loading="lazy">
-<a class="pt easy" href="https://github.com/FiloSottile/mkcert" target="_blank" rel="noopener" style="left: 42.69%; top: 23.53%" aria-label="FiloSottile/mkcert on GitHub"><span class="dot"></span><span class="card"><span class="repo">FiloSottile/mkcert</span><span class="meta"><span class="tag">Easy</span>Go · ~1.4K lines · 121 tests</span><span class="bar"><span style="width: 91.9%"></span></span><span class="meta">91.9% line coverage<span class="open">GitHub ↗</span></span></span></a>
-<a class="pt medium" href="https://github.com/PaulJuliusMartinez/jless" target="_blank" rel="noopener" style="left: 53.26%; top: 32.38%" aria-label="PaulJuliusMartinez/jless on GitHub"><span class="dot"></span><span class="card"><span class="repo">PaulJuliusMartinez/jless</span><span class="meta"><span class="tag">Medium</span>Rust · ~11K lines · 106 tests</span><span class="bar"><span style="width: 77.8%"></span></span><span class="meta">77.8% line coverage<span class="open">GitHub ↗</span></span></span></a>
-<a class="pt hard" href="https://github.com/caddyserver/caddy" target="_blank" rel="noopener" style="left: 64.45%; top: 55.18%" aria-label="caddyserver/caddy on GitHub"><span class="dot"></span><span class="card"><span class="repo">caddyserver/caddy</span><span class="meta"><span class="tag">Hard</span>Go · ~99K lines · 262 tests</span><span class="bar"><span style="width: 41.3%"></span></span><span class="meta">41.3% line coverage<span class="open">GitHub ↗</span></span></span></a>
+<img src="assets/coverage.png?v=7c5b69be" width="1522" height="1024" alt="Line coverage against project size, with three example projects" loading="lazy">
+<a class="pt easy" href="https://github.com/FiloSottile/mkcert" target="_blank" rel="noopener" style="left: 42.13%; top: 24.83%" aria-label="FiloSottile/mkcert on GitHub"><span class="dot"></span><span class="card"><span class="repo">FiloSottile/mkcert</span><span class="meta"><span class="tag">Easy</span>Go · ~1.4K lines · 121 tests</span><span class="bar"><span style="width: 91.9%"></span></span><span class="meta">91.9% line coverage<span class="open">GitHub ↗</span></span></span></a>
+<a class="pt medium" href="https://github.com/PaulJuliusMartinez/jless" target="_blank" rel="noopener" style="left: 52.63%; top: 33.60%" aria-label="PaulJuliusMartinez/jless on GitHub"><span class="dot"></span><span class="card"><span class="repo">PaulJuliusMartinez/jless</span><span class="meta"><span class="tag">Medium</span>Rust · ~11K lines · 106 tests</span><span class="bar"><span style="width: 77.8%"></span></span><span class="meta">77.8% line coverage<span class="open">GitHub ↗</span></span></span></a>
+<a class="pt hard" href="https://github.com/caddyserver/caddy" target="_blank" rel="noopener" style="left: 63.75%; top: 56.19%" aria-label="caddyserver/caddy on GitHub"><span class="dot"></span><span class="card"><span class="repo">caddyserver/caddy</span><span class="meta"><span class="tag">Hard</span>Go · ~99K lines · 262 tests</span><span class="bar"><span style="width: 41.3%"></span></span><span class="meta">41.3% line coverage<span class="open">GitHub ↗</span></span></span></a>
 </div>
-<figcaption><b>Figure 4.</b> Line coverage of each hidden test suite against project size, falling from over 90% under 5K lines to 42.0% above 50K lines. Hover over a labeled project for details, or click to open it on GitHub.</figcaption>
+<figcaption><b>Figure 4.</b> Line coverage of each hidden test suite against project size, falling from over 90% under 5K lines to 42.0% above 50K lines. Hover over a highlighted point for details, or click to open it on GitHub.</figcaption>
 </figure>
 
 <h3>Why ProgramLab is suitable for RL</h3>
@@ -116,7 +116,7 @@
 </ol>
 
 <figure>
-<img src="assets/overview.gif" width="2047" height="875" alt="Overview of ProgramLab task construction and RL" loading="lazy">
+<img src="assets/overview.gif?v=a91a72b1" width="2047" height="875" alt="Overview of ProgramLab task construction and RL" loading="lazy">
 <figcaption><b>Figure 5.</b> Overview of ProgramLab. (a) Agents turn public Go, Rust, and C/C++ projects into packaged tasks with hidden tests. (b) During RL, the coding agent probes the locked executable in a cleanroom, writes a new program, and is rewarded by the fraction of hidden tests it passes.</figcaption>
 </figure>
 
