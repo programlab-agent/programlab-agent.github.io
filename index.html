@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=629bffed">
+<link rel="stylesheet" href="style.css?v=dee4152d">
 </head>
 <body>
 <main>
@@ -87,8 +87,13 @@
 <p>Tasks ship in the ProgramBench format, so the official ProgramBench evaluator scores them without modification. Following ProgramBench's difficulty score, 205 tasks are easy, 889 medium, and 168 hard.</p>
 
 <figure class="small">
-<img src="assets/coverage.png" width="1142" height="768" alt="Line coverage against project size" loading="lazy">
-<figcaption><b>Figure 4.</b> Line coverage of each hidden test suite against project size, falling from over 90% under 5K lines to 42.0% above 50K lines.</figcaption>
+<div class="plot">
+<img src="assets/coverage.png?v=b0f0303f" width="1522" height="1024" alt="Line coverage against project size, with three example projects" loading="lazy">
+<a class="pt" href="https://github.com/FiloSottile/mkcert" target="_blank" rel="noopener" style="left: 42.69%; top: 23.53%"><span class="card"><b>FiloSottile/mkcert</b>Easy · Go · ~1.4K lines · 121 tests · 91.9% line coverage</span></a>
+<a class="pt" href="https://github.com/PaulJuliusMartinez/jless" target="_blank" rel="noopener" style="left: 53.26%; top: 32.38%"><span class="card"><b>PaulJuliusMartinez/jless</b>Medium · Rust · ~11K lines · 106 tests · 77.8% line coverage</span></a>
+<a class="pt" href="https://github.com/caddyserver/caddy" target="_blank" rel="noopener" style="left: 64.45%; top: 55.18%"><span class="card"><b>caddyserver/caddy</b>Hard · Go · ~99K lines · 262 tests · 41.3% line coverage</span></a>
+</div>
+<figcaption><b>Figure 4.</b> Line coverage of each hidden test suite against project size, falling from over 90% under 5K lines to 42.0% above 50K lines. Hover over a labeled project for details, or click to open it on GitHub.</figcaption>
 </figure>
 
 <h3>Why ProgramLab is suitable for RL</h3>

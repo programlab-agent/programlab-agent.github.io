@@ -62,6 +62,12 @@ figure { margin: 48px 0; }
 figure img { display: block; width: 100%; height: auto; }
 figcaption { font-size: 14px; line-height: 1.6; color: var(--muted); margin-top: 14px; width: var(--text); margin-left: calc((100% - var(--text)) / 2); }
 figcaption b { color: var(--ink); font-weight: 500; }
+.plot { position: relative; }
+.pt { position: absolute; width: 32px; height: 32px; margin: -16px 0 0 -16px; border-radius: 50%; text-decoration: none; }
+.pt:hover { z-index: 1; }
+.card { display: none; position: absolute; left: 50%; bottom: calc(100% + 4px); transform: translateX(-50%); white-space: nowrap; background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; font-size: 13px; line-height: 1.5; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
+.card b { display: block; font-weight: 600; }
+.pt:hover .card, .pt:focus-visible .card { display: block; }
 main > figure.narrow { margin-left: 0; margin-right: 0; }
 main > figure.small { width: 80%; margin-left: auto; margin-right: auto; }
 main > figure.w80 { width: 80%; margin-left: auto; margin-right: auto; }
