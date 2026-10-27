@@ -127,7 +127,7 @@
 <li><b>Asynchronous training.</b> Generation and training overlap, with a cap on how stale samples can be.</li>
 </ul>
 
-<p><b>Multi-agent training.</b> We train Qwen3.6-35B-A3B using an experimental variant of the Agensh harness with five agents: one leader designs test cases and delegates implementation tasks to four workers. Each rollout is executed in an isolated Docker environment, with Gitea serving as a shared coding workspace, Mattermost facilitating communication, and shared context synchronizing findings across agents. All five agents share the same Qwen3.6-35B-A3B model weights, which are optimized using a two-stage curriculum consisting of 50 training steps on easy tasks followed by 50 steps on medium tasks. Each rollout has a 30-minute execution budget, after which the Gitea repository is exported for reward calculation with ProgramLab.</p>
+<p><b>Multi-agent training.</b> We train Qwen3.6-35B-A3B using an experimental variant of the <a href="https://agens-harness.github.io/project/">Agensh</a> harness with five agents: one leader designs test cases and delegates implementation tasks to four workers. Each rollout is executed in an isolated Docker environment, with Gitea serving as a shared coding workspace, Mattermost facilitating communication, and shared context synchronizing findings across agents. All five agents share the same Qwen3.6-35B-A3B model weights, which are optimized using a two-stage curriculum consisting of 50 training steps on easy tasks followed by 50 steps on medium tasks. Each rollout has a 30-minute execution budget, after which the Gitea repository is exported for reward calculation with ProgramLab.</p>
 
 <table>
 <caption>Run configurations</caption>
