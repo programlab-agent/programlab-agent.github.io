@@ -60,8 +60,9 @@ a:hover { text-decoration-color: currentColor; }
 
 figure { margin: 48px 0; }
 figure img { display: block; width: 100%; height: auto; }
-.teaser { margin-top: 32px; }
-.teaser video { display: block; width: 100%; height: auto; cursor: pointer; }
+.teaser { margin-top: 16px; margin-bottom: 0; }
+.teaser + h2 { margin-top: 32px; }
+.teaser video { display: block; width: 100%; height: auto; aspect-ratio: 1920 / 980; object-fit: cover; object-position: 50% 100%; cursor: pointer; }
 figcaption { font-size: 14px; line-height: 1.6; color: var(--muted); margin-top: 14px; width: var(--text); margin-left: calc((100% - var(--text)) / 2); }
 figcaption b { color: var(--ink); font-weight: 500; }
 .plot { position: relative; }
