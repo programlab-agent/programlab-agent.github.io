@@ -1,4 +1,5 @@
 :root {
+  --text: min(620px, calc(100vw - 48px));
   --ink: #000;
   --ink2: #3c3c3c;
   --muted: #6e6e6e;
@@ -59,7 +60,7 @@ a:hover { text-decoration-color: currentColor; }
 
 figure { margin: 48px 0; }
 figure img { display: block; width: 100%; height: auto; }
-figcaption { font-size: 14px; line-height: 1.6; color: var(--muted); margin-top: 14px; }
+figcaption { font-size: 14px; line-height: 1.6; color: var(--muted); margin-top: 14px; width: var(--text); margin-left: calc((100% - var(--text)) / 2); }
 figcaption b { color: var(--ink); font-weight: 500; }
 main > figure.narrow { margin-left: 0; margin-right: 0; }
 main > figure.small { width: 80%; margin-left: auto; margin-right: auto; }
@@ -86,6 +87,7 @@ tbody td:first-child { color: var(--muted); }
 footer { font-size: 13px; color: var(--muted); text-align: center; padding: 40px 0 56px; }
 
 @media (max-width: 640px) {
+  :root { --text: calc(100vw - 40px); }
   body { font-size: 16.5px; }
   main { padding: 56px 20px 48px; }
   main > header { margin: 0 0 48px; }
