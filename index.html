@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=fc44ac64">
+<link rel="stylesheet" href="style.css?v=527a6ef8">
 </head>
 <body>
 <main>
@@ -46,6 +46,7 @@
 
 <figure class="teaser">
 <video src="assets/teaser.mp4?v=adf784d1" poster="assets/teaser_start.jpg?v=9a32990d" width="1920" height="1080" autoplay muted playsinline preload="auto" aria-label="One agent rebuilds a program, a team joins, then many programs being rebuilt at once"></video>
+<button class="replay" type="button">↻ Replay</button>
 </figure>
 
 <h2 id="results">Train one agent, or a whole team</h2>
@@ -169,7 +170,7 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 
 <p><b>Trajectory collection for black-box harnesses.</b> We run off-the-shelf harnesses as the policy's interface.</p>
 <ul>
-<li><b>Recording proxy.</b> The cleanroom allows only loopback networking, so every model call, from every agent, goes through a proxy that logs prompt tokens, sampled tokens, and log-probabilities. Calls are merged into training sequences by prefix matching, and only sampled tokens are trained.</li>
+<li><b>Recording proxy.</b> The cleanroom allows only loopback networking, so every model call, from every agent, goes through a proxy that logs prompt tokens, sampled tokens, and log-probabilities. Calls are merged into training sequences by prefix matching, and only model responses are trained.</li>
 <li><b>Context compaction.</b> When the harness summarizes its history, a new training segment starts. The summarization call is trained too.</li>
 <li><b>Asynchronous training.</b> Generation and training overlap, with a cap on how stale samples can be.</li>
 </ul>
@@ -213,9 +214,11 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 const tocLinks = [...document.querySelectorAll('.toc a')];
 const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && tocLinks.forEach(a => a.classList.toggle('on', a.hash === '#' + e.target.id))), { rootMargin: '0px 0px -70% 0px' });
 document.querySelectorAll('h2[id], h3[id]').forEach(h => io.observe(h));
-const tv = document.querySelector('.teaser video');
-if (matchMedia('(prefers-reduced-motion: reduce)').matches) { tv.removeAttribute('autoplay'); tv.pause(); tv.addEventListener('loadedmetadata', () => { tv.currentTime = tv.duration; }); }
-tv.onclick = () => { tv.currentTime = 0; tv.play(); };
+const tv = document.querySelector('.teaser video'), tf = tv.parentNode, rb = tf.querySelector('.replay');
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) { tv.removeAttribute('autoplay'); tv.pause(); tv.addEventListener('loadedmetadata', () => { tv.currentTime = tv.duration; }); rb.textContent = '▶ Play'; tf.classList.add('done'); }
+tv.onclick = rb.onclick = () => { tv.currentTime = 0; tv.play(); };
+tv.onplay = () => tf.classList.remove('done');
+tv.onended = () => { rb.textContent = '↻ Replay'; tf.classList.add('done'); };
 document.getElementById('copy-bib').onclick = e => navigator.clipboard.writeText(document.querySelector('#bibtex + pre').innerText).then(() => { e.target.textContent = 'Copied ✓'; setTimeout(() => e.target.textContent = 'BibTeX', 1500); });
 </script>
 </body>

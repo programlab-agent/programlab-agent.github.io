@@ -63,7 +63,10 @@ a:hover { text-decoration-color: currentColor; }
 
 figure { margin: 48px 0; }
 figure img { display: block; width: 100%; height: auto; }
-.teaser { margin-top: 16px; margin-bottom: 0; }
+.teaser { position: relative; margin-top: 16px; margin-bottom: 0; }
+.replay { position: absolute; right: 12px; bottom: 12px; font-family: inherit; font-size: 13px; color: var(--ink2); background: rgba(255, 255, 255, 0.85); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.2s, color 0.15s; }
+.replay:hover { color: var(--ink); }
+.teaser.done .replay { opacity: 1; pointer-events: auto; }
 .teaser + h2 { margin-top: 32px; }
 .teaser video { display: block; width: 100%; height: auto; aspect-ratio: 1920 / 980; object-fit: cover; object-position: 50% 100%; cursor: pointer; }
 figcaption { font-size: 14px; line-height: 1.6; color: var(--muted); margin-top: 14px; width: var(--text); margin-left: calc((100% - var(--text)) / 2); }
