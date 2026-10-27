@@ -138,10 +138,10 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 
 <h3>Why ProgramLab is suitable for RL</h3>
 <ul>
-<li><b>Graded.</b> The reward is the fraction of tests passed, so a partially working program earns partial credit. In our single-agent run, 95% of training tasks gave a nonzero reward at least once, so nearly every task provides learning signal from the start.</li>
-<li><b>Validated.</b> We drop tests that the reference fails in the cleanroom (4,047), that a no-op binary passes (1,738), or that are flaky (550). Every released task scores 1 with the reference and 0 with an empty submission.</li>
-<li>Prevent hacking</li>
-<li><b>Fast to score.</b> Because the coverage-guided loop adds a test only when it reaches new code, suites stay small and every rollout is cheap to score.</li>
+<li><b>Tests you can trust.</b> A test is kept only if it passes on the real program, passes every time, and fails on a do-nothing binary. We dropped 4,047 tests the reference failed in the cleanroom, 1,738 that a no-op binary passed, and 550 flaky ones. Every released task scores 1 with the reference and 0 with an empty submission.</li>
+<li><b>Hard to cheat.</b> The agent can run the program but not read it: the executable is execute-only, and the container has no source code, build cache, git history, or network. To score, we rebuild the agent's own program from its source in a fresh container and run tests the agent has never seen.</li>
+<li><b>Cheap to score.</b> Coverage-guided generation keeps suites small: a median of 127 tests (ProgramBench uses 770) still covers 76.6% of the reference's code, so scoring thousands of rollouts per training step stays fast.</li>
+<li><b>Tasks at the right difficulty.</b> Tasks range from small tools to projects with over 100K lines of code: 205 easy, 889 medium, and 168 hard. This makes it easier to pick tasks that suit your agent: hard enough to learn from, but not out of reach. The spread also makes curricula simple: our multi-agent run trained 50 steps on easy tasks, then 50 on medium.</li>
 </ul>
 
 <p><b>How we build ProgramLab.</b> We collect and filter open programmable projects from package registries (Homebrew, <a href="http://crates.io">crates.io</a>, <a href="http://pkg.go.dev">pkg.go.dev</a>) and GitHub which reliably produce a standalone executable. For each task, we use Codex CLI with GPT-5.5 to construct the environment following three steps below, each checked by an independent validator that does not trust the agent's own report:</p>
