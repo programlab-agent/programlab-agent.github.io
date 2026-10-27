@@ -111,13 +111,11 @@
 …
 The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"</pre>
 <ul class="checks">
-<li>Exits with code 0</li>
-<li>Prints nothing to stdout</li>
-<li>Says where the certificate and key are</li>
-<li>Creates example.org.pem and example.org-key.pem</li>
-<li>Certificate is readable (0644), key is private (0600)</li>
-<li>Files hold a certificate and a private key</li>
-<li>Certificate is issued for example.org</li>
+<li>Exits cleanly, with nothing on stdout</li>
+<li>Says where the certificate and key went</li>
+<li>Writes example.org.pem and example.org-key.pem</li>
+<li>Keeps the key private (0600)</li>
+<li>Issues the certificate for example.org</li>
 </ul>
 </div>
 <details><summary>Show test code</summary><pre><code>def test_default_dns_certificate_files_and_san(program_under_test):
