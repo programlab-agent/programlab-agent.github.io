@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=bf577321">
+<link rel="stylesheet" href="style.css?v=b574dcf4">
 </head>
 <body>
 <main>
@@ -89,12 +89,47 @@
 <figure class="small">
 <div class="plot">
 <img src="assets/coverage.png?v=5893c89b" width="1522" height="1024" alt="Line coverage against project size, with three example projects" loading="lazy">
-<a class="pt easy" href="https://github.com/FiloSottile/mkcert" target="_blank" rel="noopener" style="left: 42.13%; top: 24.76%" aria-label="FiloSottile/mkcert on GitHub"><span class="dot"></span><span class="card"><span class="repo">FiloSottile/mkcert</span><span class="meta"><span class="tag">Easy</span>Go · ~1.4K lines · 121 tests</span><span class="bar"><span style="width: 91.9%"></span></span><span class="meta">91.9% line coverage<span class="open">GitHub ↗</span></span></span></a>
-<a class="pt medium" href="https://github.com/PaulJuliusMartinez/jless" target="_blank" rel="noopener" style="left: 52.63%; top: 33.54%" aria-label="PaulJuliusMartinez/jless on GitHub"><span class="dot"></span><span class="card"><span class="repo">PaulJuliusMartinez/jless</span><span class="meta"><span class="tag">Medium</span>Rust · ~11K lines · 106 tests</span><span class="bar"><span style="width: 77.8%"></span></span><span class="meta">77.8% line coverage<span class="open">GitHub ↗</span></span></span></a>
-<a class="pt hard" href="https://github.com/caddyserver/caddy" target="_blank" rel="noopener" style="left: 63.75%; top: 56.15%" aria-label="caddyserver/caddy on GitHub"><span class="dot"></span><span class="card"><span class="repo">caddyserver/caddy</span><span class="meta"><span class="tag">Hard</span>Go · ~99K lines · 262 tests</span><span class="bar"><span style="width: 41.3%"></span></span><span class="meta">41.3% line coverage<span class="open">GitHub ↗</span></span></span></a>
+<a class="pt easy" href="https://github.com/FiloSottile/mkcert" target="_blank" rel="noopener" style="left: 42.13%; top: 24.76%" aria-label="FiloSottile/mkcert on GitHub"><span class="dot"></span><span class="card"><span class="repo">FiloSottile/mkcert</span><span class="desc">Makes locally trusted HTTPS certificates for development</span><span class="meta"><span class="tag">Easy</span>Go · ~1.4K lines</span><span class="tests">121 tests (CA environment 22, certificate options 17, certificate generation 18, CLI usage 12, CSR &amp; errors 23, trust stores 29)</span><span class="bar"><span style="width: 91.9%"></span></span><span class="meta">91.9% line coverage<span class="open">GitHub ↗</span></span></span></a>
+<a class="pt medium" href="https://github.com/PaulJuliusMartinez/jless" target="_blank" rel="noopener" style="left: 52.63%; top: 33.54%" aria-label="PaulJuliusMartinez/jless on GitHub"><span class="dot"></span><span class="card"><span class="repo">PaulJuliusMartinez/jless</span><span class="desc">Command-line viewer for exploring JSON</span><span class="meta"><span class="tag">Medium</span>Rust · ~11K lines</span><span class="tests">106 tests (interactive rendering 51, print commands 21, non-TTY input/output 18, CLI options 16)</span><span class="bar"><span style="width: 77.8%"></span></span><span class="meta">77.8% line coverage<span class="open">GitHub ↗</span></span></span></a>
+<a class="pt hard" href="https://github.com/caddyserver/caddy" target="_blank" rel="noopener" style="left: 63.75%; top: 56.15%" aria-label="caddyserver/caddy on GitHub"><span class="dot"></span><span class="card"><span class="repo">caddyserver/caddy</span><span class="desc">Web server with automatic HTTPS</span><span class="meta"><span class="tag">Hard</span>Go · ~99K lines</span><span class="tests">262 tests (config adapt 78, runtime lifecycle 46, respond server 25, storage transfer 20, +10 more groups)</span><span class="bar"><span style="width: 41.3%"></span></span><span class="meta">41.3% line coverage<span class="open">GitHub ↗</span></span></span></a>
 </div>
 <figcaption><b>Figure 4.</b> Line coverage of each hidden test suite against project size, falling from over 90% under 5K lines to 42.0% above 50K lines. Hover over a highlighted point for details, or click to open it on GitHub.</figcaption>
 </figure>
+
+<p>Each test runs the program and checks only what a user can observe. Here is one of mkcert's 121 hidden tests:</p>
+<div class="testcard">
+<p class="head"><b>FiloSottile/mkcert</b> · test_default_dns_certificate_files_and_san</p>
+<div class="cols">
+<pre class="term">$ mkcert example.org
+…
+The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"</pre>
+<ul class="checks">
+<li>Exits with code 0</li>
+<li>Prints nothing to stdout</li>
+<li>Says where the certificate and key are</li>
+<li>Creates example.org.pem and example.org-key.pem</li>
+<li>Certificate is readable (0644), key is private (0600)</li>
+<li>Files hold a certificate and a private key</li>
+<li>Certificate is issued for example.org</li>
+</ul>
+</div>
+<details><summary>Show test code</summary><pre><code>def test_default_dns_certificate_files_and_san(program_under_test):
+    proc = program_under_test.run("example.org")
+    cert_file = program_under_test.work / "example.org.pem"
+    key_file = program_under_test.work / "example.org-key.pem"
+
+    assert proc.returncode == 0
+    assert proc.stdout == ""
+    assert "The certificate is at \"./example.org.pem\" and the key at \"./example.org-key.pem\"" in proc.stderr
+    assert cert_file.is_file()
+    assert key_file.is_file()
+    assert file_mode(cert_file) == 0o644
+    assert file_mode(key_file) == 0o600
+    assert pem_block_types(cert_file) == ["CERTIFICATE"]
+    assert pem_block_types(key_file) == ["PRIVATE KEY"]
+    assert subject_alt_names(cert_file) == {("DNS", "example.org")}</code></pre></details>
+<p class="fine">It passes on the reference mkcert and fails on a dummy binary that accepts any input.</p>
+</div>
 
 <h3>Why ProgramLab is suitable for RL</h3>
 <ul>

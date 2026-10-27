@@ -74,7 +74,9 @@ figcaption b { color: var(--ink); font-weight: 500; }
 @keyframes ping { 0% { transform: scale(0.5); opacity: 0.5; } 80%, 100% { transform: scale(1.4); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .dot, .dot::after { animation: none; } }
 .card { display: none; position: absolute; left: 50%; bottom: calc(100% + 2px); transform: translateX(-50%); width: 280px; background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.45; text-align: left; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); }
-.card .repo { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.card .repo { display: block; font-size: 14px; font-weight: 600; }
+.card .desc { display: block; color: var(--ink2); margin: 2px 0 8px; }
+.card .tests { display: block; color: var(--muted); font-size: 12.5px; margin-top: 6px; }
 .card .meta { display: flex; align-items: center; gap: 6px; color: var(--muted); }
 .card .tag { font-size: 11px; font-weight: 600; color: #08306b; background: var(--c); border-radius: 999px; padding: 1px 8px; }
 .pt.hard .tag { color: #fff; }
@@ -82,6 +84,18 @@ figcaption b { color: var(--ink); font-weight: 500; }
 .card .bar span { display: block; height: 100%; background: #08306b; }
 .card .open { margin-left: auto; color: var(--ink); font-weight: 500; }
 .pt:hover .card, .pt:focus-visible .card { display: block; }
+.testcard { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin: 24px 0 40px; }
+.testcard .head { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+.testcard .head b { color: var(--ink); }
+.testcard .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+.testcard .term { margin: 0; background: #111827; color: #e5e7eb; font-size: 12.5px; line-height: 1.6; padding: 14px 16px; }
+.checks { list-style: none; padding: 0; margin: 0; font-size: 14px; line-height: 1.5; }
+.checks li { margin: 0 0 6px; padding-left: 22px; position: relative; }
+.checks li::before { content: "✓"; position: absolute; left: 0; color: #16a34a; font-weight: 600; }
+.testcard details { margin-top: 14px; font-size: 14px; }
+.testcard summary { cursor: pointer; color: var(--ink2); }
+.testcard details pre { margin: 10px 0 0; font-size: 12px; }
+.testcard .fine { font-size: 13px; color: var(--muted); margin: 12px 0 0; }
 main > figure.narrow { margin-left: 0; margin-right: 0; }
 main > figure.small { width: 80%; margin-left: auto; margin-right: auto; }
 main > figure.w80 { width: 80%; margin-left: auto; margin-right: auto; }
@@ -107,6 +121,7 @@ tbody td:first-child { color: var(--muted); }
 footer { font-size: 13px; color: var(--muted); text-align: center; padding: 40px 0 56px; }
 
 @media (max-width: 640px) {
+  .testcard .cols { grid-template-columns: 1fr; }
   :root { --text: calc(100vw - 40px); }
   body { font-size: 16.5px; }
   main { padding: 56px 20px 48px; }
