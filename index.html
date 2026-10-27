@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=f1e5d8b7">
+<link rel="stylesheet" href="style.css?v=a02b6f31">
 </head>
 <body>
 <main>
@@ -32,6 +32,7 @@
 <nav class="toc">
 <a href="#results">Train one agent, or a whole team</a>
 <a href="#data">Data recipe</a>
+<a class="sub" href="#why-rl">Why ProgramLab is suitable for RL</a>
 <a href="#rl">Agentic RL in ProgramLab</a>
 <a href="#related">Related work</a>
 <a href="#next">Next</a>
@@ -136,7 +137,7 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 <p class="fine">It passes on the reference mkcert and fails on a dummy binary that accepts any input.</p>
 </div>
 
-<h3>Why ProgramLab is suitable for RL</h3>
+<h3 id="why-rl">Why ProgramLab is suitable for RL</h3>
 <ul>
 <li><b>Tests you can trust.</b> A test is kept only if it passes on the real program, passes every time, and fails on a do-nothing binary. We dropped 4,047 tests the reference failed in the cleanroom, 1,738 that a no-op binary passed, and 550 flaky ones. Every released task scores 1 with the reference and 0 with an empty submission.</li>
 <li><b>Hard to cheat.</b> The agent can run the program but not read it: the executable is execute-only, and the container has no source code, build cache, git history, or network. To score, we rebuild the agent's own program from its source in a fresh container and run tests the agent has never seen.</li>
@@ -211,7 +212,7 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 <script>
 const tocLinks = [...document.querySelectorAll('.toc a')];
 const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && tocLinks.forEach(a => a.classList.toggle('on', a.hash === '#' + e.target.id))), { rootMargin: '0px 0px -70% 0px' });
-document.querySelectorAll('h2[id]').forEach(h => io.observe(h));
+document.querySelectorAll('h2[id], h3[id]').forEach(h => io.observe(h));
 const tv = document.querySelector('.teaser video');
 if (matchMedia('(prefers-reduced-motion: reduce)').matches) { tv.removeAttribute('autoplay'); tv.pause(); tv.addEventListener('loadedmetadata', () => { tv.currentTime = tv.duration; }); }
 tv.onclick = () => { tv.currentTime = 0; tv.play(); };
