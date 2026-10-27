@@ -40,7 +40,7 @@
 </nav>
 
 <section class="tldr">
-<p class="lead">Give an agent a real program to play with, hide the code, and ask it to rebuild the whole thing. Even top agents struggle on this.</p>
+<p class="lead">Give an agent a real program to play with, hide the code, and ask it to rebuild the whole thing. Even top agents struggle with it.</p>
 <p class="lead">ProgramLab gives agents <b>1,262</b> such programs to practice on. Environments are available <a href="https://huggingface.co/Program-Lab">here</a>.</p>
 </section>
 
@@ -54,17 +54,17 @@
 <p>Using Qwen3.6-35B-A3B, we run RL on ProgramLab and evaluate on <a href="https://programbench.com/">ProgramBench</a>:</p>
 <ul>
 <li><b>Single agent:</b> 13.7% → 24.0% in Claude Code under a two-hour budget.</li>
-<li><b>A 5-Agent team:</b> 17.2% → 25.0% in <a href="https://agens-harness.github.io/project/">Agensh</a> under a 30-minute budget.</li>
+<li><b>A five-agent team:</b> 17.2% → 25.0% in <a href="https://agens-harness.github.io/project/">Agensh</a> under a 30-minute budget.</li>
 </ul>
 
-<p><b>Long-horizon agentic RL improves across harnesses.</b> Trained in GitHub Copilot CLI, the policy improves ProgramBench in all harnesses we test, including three unseen during training: Claude Code (+10.3), Codex CLI (+8.3), and mini-SWE-agent (+4.1). Under an extended six-hour budget, Claude Code goes from 19.0 to 27.6.</p>
+<p><b>Gains transfer across harnesses.</b> We train only in GitHub Copilot CLI, and the policy improves on ProgramBench in every harness we test, including three it never saw in training: Claude Code (+10.3), Codex CLI (+8.3), and mini-SWE-agent (+4.1). Under an extended six-hour budget, Claude Code goes from 19.0 to 27.6.</p>
 
 <figure class="narrow">
 <img src="assets/main_result.gif?v=2cdb8900" width="1421" height="586" alt="ProgramBench pass rate before and after RL across four harnesses">
 <figcaption><b>Figure 1.</b> ProgramBench pass rate of Qwen3.6-35B-A3B before and after RL on ProgramLab, with a two-hour budget. RL runs only in GitHub Copilot CLI, yet the gains carry over to all four harnesses.</figcaption>
 </figure>
 
-<p><b>Agent learns to write compilable programs during RL.</b> During RL training with 1024 rollouts per step(64 task * 16 rollout), rollouts grow from about 43 to 72 turns while mean training reward rises with 8× more rollouts ending with a compiling program (3.4% → 27.9%), under 2-hour rollout and 128k context budget.</p>
+<p><b>The agent learns to write programs that compile.</b> Each RL step runs 1,024 rollouts (64 tasks × 16), each with a two-hour, 128K-context budget. Over training, rollouts grow from about 43 to 72 turns, mean reward rises, and the share of rollouts ending with a compiling program grows 8×, from 3.4% to 27.9%.</p>
 
 <figure>
 <img src="assets/training_reward_turns.gif?v=4a516956" width="2052" height="602" alt="Training reward and turns per rollout during single-agent RL" loading="lazy">
@@ -80,12 +80,12 @@
 
 <h2 id="data">Data recipe</h2>
 
-<p><b>What's in ProgramLab?</b> ProgramLab contains 1,262 tasks from 1,262 distinct public repositories (566 Go, 416 Rust, 280 C/C++), with 187,208 hidden behavioral tests in total. The reference programs are substantial: the median project has an estimated 11.5K lines of source code, and about 150 exceed 100K lines. Each task contains:</p>
+<p><b>What's in ProgramLab?</b> ProgramLab contains 1,262 tasks from 1,262 distinct public repositories (566 Go, 416 Rust, 280 C/C++), with 187,208 hidden behavioral tests in total. The median project has about 11.5K lines of source code, and about 150 exceed 100K lines. Each task contains:</p>
 <ul>
 <li><b>A reference executable</b>, built from a pinned commit and shipped execute-only.</li>
 <li><b>Documentation</b>: usage text, help output, man pages, and any fixtures the agent cannot create itself.</li>
 <li><b>A hidden test suite</b>: a median of 127 tests that run the agent's program and compare its observable behavior with the reference.
-<ul><li>The result is a small but thorough suite: a median of 127 tests (ProgramBench has 770) covers 76.6% of the reference's first-party lines, achieving over 90% for projects under 5K lines.</li></ul>
+<ul><li>These cover 76.6% of the reference's first-party lines (over 90% for projects under 5K lines), with far fewer tests than ProgramBench's 770.</li></ul>
 </li>
 </ul>
 
@@ -140,18 +140,18 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 
 <h3 id="why-rl">Why ProgramLab is suitable for RL</h3>
 <ul>
-<li><b>Tests you can trust.</b> A test is kept only if it passes on the real program, passes every time, and fails on a do-nothing binary. We dropped 4,047 tests the reference failed in the cleanroom, 1,738 that a no-op binary passed, and 550 flaky ones. Every released task scores 1 with the reference and 0 with an empty submission.</li>
+<li><b>Tests you can trust.</b> A test is kept only if it passes on the real program, passes every time, and fails on a do-nothing binary. We dropped 4,047 tests the reference failed in the cleanroom, 1,738 that a no-op binary passed, and 550 flaky ones.</li>
 <li><b>Hard to cheat.</b> The agent can run the program but not read it: the executable is execute-only, and the container has no source code, build cache, git history, or network. To score, we rebuild the agent's own program from its source in a fresh container and run tests the agent has never seen.</li>
 <li><b>Cheap to score.</b> Coverage-guided generation keeps suites small: a median of 127 tests (ProgramBench uses 770) still covers 76.6% of the reference's code, so scoring thousands of rollouts per training step stays fast.</li>
 <li><b>Tasks at the right difficulty.</b> Tasks range from small tools to projects with over 100K lines of code: 205 easy, 889 medium, and 168 hard. This makes it easier to pick tasks that suit your agent: hard enough to learn from, but not out of reach. The spread also makes curricula simple: our multi-agent run trained 50 steps on easy tasks, then 50 on medium.</li>
 </ul>
 
-<p><b>How we build ProgramLab.</b> We collect and filter open programmable projects from package registries (Homebrew, <a href="http://crates.io">crates.io</a>, <a href="http://pkg.go.dev">pkg.go.dev</a>) and GitHub which reliably produce a standalone executable. For each task, we use Codex CLI with GPT-5.5 to construct the environment following three steps below, each checked by an independent validator that does not trust the agent's own report:</p>
+<p><b>How we build ProgramLab.</b> We collect open-source projects from package registries (Homebrew, <a href="http://crates.io">crates.io</a>, <a href="http://pkg.go.dev">pkg.go.dev</a>) and GitHub, and keep those that reliably build a standalone executable. For each task, Codex CLI with GPT-5.5 builds the environment in the three steps below, and a separate validator re-checks each step:</p>
 <ol>
 <li><b>Build the reference.</b> Compile the project's main executable and record the build script.</li>
-<li><b>Synthesize behavioral tests.</b> Probe the executable and write tests that assert on its observable effects. A test is kept only if it passes on the reference, passes on repeated runs, and fails on a dummy binary that accepts any input. We design a <b>coverage-guided iteration</b> to produce high-quality and compact test suites that are suitable for RL.
+<li><b>Synthesize behavioral tests.</b> Probe the executable and write tests that assert on its observable effects. A test is kept only if it passes on the reference, passes on repeated runs, and fails on a dummy binary that accepts any input.
 <aside class="note">
-<b>Coverage-guided iteration.</b> After each round, we measure line coverage of the reference on an instrumented build nd feed the coverage report back to the agent, which then writes tests for the behavior it has not yet exercised. The loop repeats until coverage stops improving, so each new test has to reach code that earlier tests missed.
+<b>Coverage-guided iteration.</b> After each round, we measure line coverage of the reference on an instrumented build and feed the coverage report back to the agent, which then writes tests for code that is not yet covered. The loop stops when coverage stops improving.
 </aside>
 </li>
 <li><b>Package the cleanroom.</b> Ship an execute-only binary and its documentation; remove source, build caches, and version-control history.</li>
@@ -164,7 +164,7 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 
 <h2 id="rl">Agentic RL in ProgramLab</h2>
 
-<p>In each task, the agent works in a cleanroom container with a build toolchain and no network access. It can run the reference executable and read its documentation (usage text, help output, man pages), but it cannot read the source. It writes code in any language, plus a <code>compile.sh</code> that builds a candidate executable. <a href="https://programbench.com/">ProgramBench</a> (<a href="https://arxiv.org/abs/2605.03546">Yang et al., 2026</a>) makes this challenge concrete.</p>
+<p>We follow the setting of <a href="https://programbench.com/">ProgramBench</a> (<a href="https://arxiv.org/abs/2605.03546">Yang et al., 2026</a>). In each task, the agent works in a cleanroom container with a build toolchain and no network access. It can run the reference executable and read its documentation (usage text, help output, man pages), but it cannot read the source. It writes code in any language, plus a <code>compile.sh</code> that builds a candidate executable.</p>
 
 <p>For scoring, the candidate is rebuilt in a fresh container and run against a hidden test suite. The reward is the fraction of tests passed, <span class="math"><i>r</i> = |<i>T</i><sub>pass</sub>| / |<i>T</i>| ∈ [0, 1]</span>.</p>
 
@@ -175,11 +175,11 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 <li><b>Asynchronous training.</b> Generation and training overlap, with a cap on how stale samples can be.</li>
 </ul>
 
-<p><b>Multi-agent training.</b> We train Qwen3.6-35B-A3B using an experimental variant of the <a href="https://agens-harness.github.io/project/">Agensh</a> harness with five agents: one leader designs test cases and delegates implementation tasks to four workers. Each rollout is executed in an isolated Docker environment, with Gitea serving as a shared coding workspace, Mattermost facilitating communication, and shared context synchronizing findings across agents. All five agents share the same Qwen3.6-35B-A3B model weights, which are optimized using a two-stage curriculum consisting of 50 training steps on easy tasks followed by 50 steps on medium tasks. Each rollout has a 30-minute execution budget, after which the Gitea repository is exported for reward calculation with ProgramLab.</p>
+<p><b>Multi-agent training.</b> We train Qwen3.6-35B-A3B in an experimental version of the <a href="https://agens-harness.github.io/project/">Agensh</a> harness with five agents: one leader writes test cases and hands implementation work to four workers. Each rollout runs in its own Docker environment, where agents share code through Gitea, talk on Mattermost, and share notes through a common context. All five agents use the same weights. We train 50 steps on easy tasks, then 50 on medium. Each rollout gets 30 minutes, after which we export the Gitea repository and score it with ProgramLab.</p>
 
 <table>
 <caption>Run configurations</caption>
-<thead><tr><th></th><th>Single agent</th><th>Multi agents</th></tr></thead>
+<thead><tr><th></th><th>Single-agent</th><th>Multi-agent</th></tr></thead>
 <tbody>
 <tr><td>Model</td><td>Qwen3.6-35B-A3B</td><td>Qwen3.6-35B-A3B</td></tr>
 <tr><td>Training harness</td><td>GitHub Copilot CLI</td><td>Agensh with 5 agents running GitHub Copilot CLI</td></tr>
