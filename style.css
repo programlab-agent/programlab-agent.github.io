@@ -68,7 +68,7 @@ figcaption b { color: var(--ink); font-weight: 500; }
 .plot { position: relative; }
 .plot .layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; transition: opacity 0.2s; }
 .plot:has(.pt.easy:hover) .layer:is(.medium, .hard), .plot:has(.pt.medium:hover) .layer:is(.easy, .hard), .plot:has(.pt.hard:hover) .layer:is(.easy, .medium) { opacity: 0.1; }
-.pt { position: absolute; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; display: grid; place-items: center; text-decoration: none; outline: none; }
+.pt { position: absolute; width: min(48px, 10%); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; display: grid; place-items: center; text-decoration: none; outline: none; }
 .pt.easy { --c: #c6dbef; } .pt.medium { --c: #6baed6; } .pt.hard { --c: #2b7bba; }
 .pt:hover { z-index: 1; }
 .dot { position: relative; width: 14px; height: 14px; border-radius: 50%; background: var(--c); border: 2px solid #fff; box-shadow: 0 0 0 2px #08306b; animation: bob 2.4s ease-in-out infinite; }
