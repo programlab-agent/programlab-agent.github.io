@@ -29,6 +29,8 @@ h1 { margin: 0 0 24px; }
 h1 img { display: block; height: 64px; width: auto; margin: 0 auto; }
 .sub { font-size: min(30px, calc((100vw - 48px) / 27)); line-height: 1.3; color: var(--ink2); margin: 0 auto 32px; white-space: nowrap; }
 .authors { font-size: 14px; line-height: 1.5; color: #a3a3a3; margin: -18px 0 28px; }
+.authors a { color: inherit; text-decoration: none; transition: color 0.15s; }
+.authors a:hover { color: var(--ink); }
 .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
 .btn { font-size: 14px; color: var(--ink); text-decoration: none; background: var(--soft); border-radius: 999px; padding: 8px 16px; }
 .btn:hover { background: #e8e8e8; text-decoration: none; }
@@ -39,7 +41,7 @@ button.btn { font-family: inherit; letter-spacing: inherit; border: 0; cursor: p
   .toc { display: flex; flex-direction: column; gap: 12px; position: fixed; top: 120px; left: 32px; width: 160px; font-size: 13px; line-height: 1.35; }
   .toc a { color: #a3a3a3; text-decoration: none; transition: color 0.15s; }
   .toc a:hover, .toc a.on { color: var(--ink); }
-  .toc a.sub { padding-left: 12px; font-size: 12.5px; }
+  .toc a.l2 { padding-left: 12px; font-size: 12.5px; }
 }
 
 .lead { font-size: 20px; line-height: 1.55; margin: 0; }
