@@ -170,7 +170,7 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 
 <p><b>Trajectory collection for black-box harnesses.</b> We run off-the-shelf harnesses as the policy's interface.</p>
 <ul>
-<li><b>Recording proxy.</b> The cleanroom allows only loopback networking, so every model call, from every agent, goes through a proxy that logs prompt tokens, sampled tokens, and log-probabilities. Calls are merged into training sequences by prefix matching, and only model responses are trained.</li>
+<li><b>Logging every model call.</b> Each harness reaches the model through a local proxy, the only network route the cleanroom allows. The proxy logs prompt tokens, sampled tokens, and log-probabilities for every call from every agent. Calls are merged into training sequences by prefix matching, and only model responses are trained.</li>
 <li><b>Context compaction.</b> When the harness summarizes its history, a new training segment starts. The summarization call is trained too.</li>
 <li><b>Asynchronous training.</b> Generation and training overlap, with a cap on how stale samples can be.</li>
 </ul>
