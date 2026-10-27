@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=527a6ef8">
+<link rel="stylesheet" href="style.css?v=a7cc2fc5">
 </head>
 <body>
 <main>
@@ -181,10 +181,20 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 <caption>Run configurations</caption>
 <thead><tr><th></th><th>Single-agent</th><th>Multi-agent</th></tr></thead>
 <tbody>
-<tr><td>Model</td><td>Qwen3.6-35B-A3B</td><td>Qwen3.6-35B-A3B</td></tr>
-<tr><td>Training harness</td><td>GitHub Copilot CLI</td><td>Agensh with 5 agents running GitHub Copilot CLI</td></tr>
+<tr><td>Model</td><td colspan="2">Qwen3.6-35B-A3B</td></tr>
+</tbody>
+<tbody>
+<tr class="grp"><th colspan="3">Training</th></tr>
+<tr><td>Harness</td><td>GitHub Copilot CLI</td><td>Agensh, 5 agents running GitHub Copilot CLI</td></tr>
+<tr><td>RL steps</td><td>60</td><td>100 (50 easy, then 50 medium)</td></tr>
 <tr><td>Rollouts per task</td><td>16</td><td>4</td></tr>
-<tr><td>Training budget per rollout</td><td>2 hours, 128K context</td><td>30 minutes, 256K context</td></tr>
+<tr><td>Budget per rollout</td><td>2 hours, 128K context</td><td>30 minutes, 256K context</td></tr>
+</tbody>
+<tbody>
+<tr class="grp"><th colspan="3">Evaluation (Figures 1 and 3)</th></tr>
+<tr><td>Benchmark</td><td colspan="2">ProgramBench, all 200 tasks</td></tr>
+<tr><td>Harnesses</td><td>GitHub Copilot CLI, Claude Code, Codex CLI, mini-SWE-agent</td><td>Agensh, same as training</td></tr>
+<tr><td>Budget per task</td><td>2 hours, 256K context</td><td>30 minutes, 256K context</td></tr>
 </tbody>
 </table>
 

@@ -128,6 +128,7 @@ caption { caption-side: top; text-align: left; font-weight: 500; padding-bottom:
 th, td { text-align: left; vertical-align: top; padding: 10px 16px 10px 0; }
 thead th { border-bottom: 1px solid var(--line); font-weight: 500; }
 tbody td:first-child { color: var(--muted); }
+tr.grp th { font-weight: 500; padding-top: 20px; border-bottom: 1px solid var(--line); }
 
 footer { font-size: 13px; color: var(--muted); text-align: center; padding: 40px 0 56px; }
 
