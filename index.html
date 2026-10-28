@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ProgramLab: Train single and multi agents to rebuild programs with RL</title>
-<meta name="description" content="1,262 RL environments for agents learning to rebuild programs through trial and error. RL on ProgramLab gains +10.3 points as a single agent and +7.9 points as a five-agent team on ProgramBench.">
+<meta name="description" content="1,261 RL environments for agents learning to rebuild programs through trial and error. RL on ProgramLab gains +10.3 points as a single agent and +7.9 points as a five-agent team on ProgramBench.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ProgramLab: Train single and multi agents to rebuild programs with RL">
-<meta property="og:description" content="1,262 RL environments for agents learning to rebuild programs through trial and error.">
+<meta property="og:description" content="1,261 RL environments for agents learning to rebuild programs through trial and error.">
 <meta property="og:image" content="https://programlab.blog/assets/main_result.gif">
 <link rel="icon" href="assets/icon.svg?v=0edddf7f" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,11 +41,11 @@
 
 <section class="tldr">
 <p class="lead">Give an agent a real program to play with, hide the code, and ask it to rebuild the whole thing. Even top agents struggle with it.</p>
-<p class="lead">ProgramLab gives agents <b>1,262</b> such programs to practice on. Environments are available <a href="https://huggingface.co/Program-Lab">here</a>.</p>
+<p class="lead">ProgramLab gives agents <b>1,261</b> such programs to practice on. Environments are available <a href="https://huggingface.co/Program-Lab">here</a>.</p>
 </section>
 
 <figure class="teaser">
-<video src="assets/teaser.mp4?v=adf784d1" poster="assets/teaser_start.jpg?v=9a32990d" width="1920" height="1080" autoplay muted playsinline preload="auto" aria-label="One agent rebuilds a program, a team joins, then many programs being rebuilt at once"></video>
+<video src="assets/teaser.mp4?v=5a001070" poster="assets/teaser_start.jpg?v=9a32990d" width="1920" height="1080" autoplay muted playsinline preload="auto" aria-label="One agent rebuilds a program, a team joins, then many programs being rebuilt at once"></video>
 <button class="replay" type="button">↻ Replay</button>
 </figure>
 
@@ -80,7 +80,9 @@
 
 <h2 id="data">Data recipe</h2>
 
-<p><b>What's in ProgramLab?</b> ProgramLab contains 1,262 tasks from 1,262 distinct public repositories (566 Go, 416 Rust, 280 C/C++), with 187,208 hidden behavioral tests in total. The median project has about 11.5K lines of source code, and about 150 exceed 100K lines. Each task contains:</p>
+<p><b>The task.</b> We follow the setting of <a href="https://programbench.com/">ProgramBench</a> (<a href="https://arxiv.org/abs/2605.03546">Yang et al., 2026</a>). The agent works in a cleanroom container with a build toolchain and no network. It can run the reference executable and read its documentation, but not the source. It writes a program in any language, plus a <code>compile.sh</code> that builds it.</p>
+
+<p><b>What's in ProgramLab?</b> ProgramLab contains 1,261 tasks from 1,261 distinct public repositories (566 Go, 415 Rust, 280 C/C++), with 187,073 hidden behavioral tests in total. The median project has about 11.5K lines of source code, and about 150 exceed 100K lines. Each task contains:</p>
 <ul>
 <li><b>A reference executable</b>, built from a pinned commit and shipped execute-only.</li>
 <li><b>Documentation</b>: usage text, help output, man pages, and any fixtures the agent cannot create itself.</li>
@@ -89,7 +91,7 @@
 </li>
 </ul>
 
-<p>Tasks ship in the ProgramBench format, so the official ProgramBench evaluator scores them without modification. Following ProgramBench's difficulty score, 205 tasks are easy, 889 medium, and 168 hard.</p>
+<p>Tasks ship in the ProgramBench format, so the official ProgramBench evaluator scores them without modification. Following ProgramBench's difficulty score, 205 tasks are easy, 888 medium, and 168 hard.</p>
 
 <figure class="small">
 <div class="plot">
@@ -140,10 +142,10 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 
 <h3 id="why-rl">Why ProgramLab is suitable for RL</h3>
 <ul>
-<li><b>Tests you can trust.</b> A test is kept only if it passes on the real program, passes every time, and fails on a do-nothing binary. We dropped 4,047 tests the reference failed in the cleanroom, 1,738 that a no-op binary passed, and 550 flaky ones.</li>
-<li><b>Hard to cheat.</b> The agent can run the program but not read it: the executable is execute-only, and the container has no source code, build cache, git history, or network. To score, we rebuild the agent's own program from its source in a fresh container and run tests the agent has never seen.</li>
+<li><b>Tests you can trust.</b> A test is kept only if it passes on the real program, passes every time, and fails on a do-nothing binary. We dropped 4,047 tests the reference failed in the cleanroom, 1,735 that a no-op binary passed, and 550 flaky ones.</li>
+<li><b>Hard to cheat.</b> We keep ProgramBench's cleanroom: the agent can run the program but not read it, and scoring rebuilds the agent's program in a fresh container and runs tests it has never seen. Since every task comes from a new repository, we also scrub each image for leaks: source files, build caches, dependency sources, git history, and docs that describe internals. Before release, we check that only the execute-only binary remains, with no readable copy and no network. This matters more for RL than for evaluation, since a policy trained on tens of thousands of rollouts will exploit any loophole it finds.</li>
 <li><b>Cheap to score.</b> Coverage-guided generation keeps suites small: a median of 127 tests (ProgramBench uses 770) still covers 76.6% of the reference's code, so scoring thousands of rollouts per training step stays fast.</li>
-<li><b>Tasks at the right difficulty.</b> Tasks range from small tools to projects with over 100K lines of code: 205 easy, 889 medium, and 168 hard. This makes it easier to pick tasks that suit your agent: hard enough to learn from, but not out of reach. The spread also makes curricula simple: our multi-agent run trained 50 steps on easy tasks, then 50 on medium.</li>
+<li><b>Tasks at the right difficulty.</b> Tasks range from small tools to projects with over 100K lines of code: 205 easy, 888 medium, and 168 hard. This makes it easier to pick tasks that suit your agent: hard enough to learn from, but not out of reach. The spread also makes curricula simple: our multi-agent run trained 50 steps on easy tasks, then 50 on medium.</li>
 </ul>
 
 <p><b>How we build ProgramLab.</b> We collect open-source projects from package registries (Homebrew, <a href="http://crates.io">crates.io</a>, <a href="http://pkg.go.dev">pkg.go.dev</a>) and GitHub, and keep those that reliably build a standalone executable. For each task, Codex CLI with GPT-5.5 builds the environment in the three steps below, and a separate validator re-checks each step:</p>
@@ -164,9 +166,7 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
 
 <h2 id="rl">Agentic RL in ProgramLab</h2>
 
-<p>We follow the setting of <a href="https://programbench.com/">ProgramBench</a> (<a href="https://arxiv.org/abs/2605.03546">Yang et al., 2026</a>). In each task, the agent works in a cleanroom container with a build toolchain and no network access. It can run the reference executable and read its documentation (usage text, help output, man pages), but it cannot read the source. It writes code in any language, plus a <code>compile.sh</code> that builds a candidate executable.</p>
-
-<p>For scoring, the candidate is rebuilt in a fresh container and run against a hidden test suite. The reward is the fraction of tests passed, <span class="math"><i>r</i> = |<i>T</i><sub>pass</sub>| / |<i>T</i>| ∈ [0, 1]</span>.</p>
+<p>For scoring, the agent's program is rebuilt in a fresh container and run against the hidden test suite. The reward is the fraction of tests passed, <span class="math"><i>r</i> = |<i>T</i><sub>pass</sub>| / |<i>T</i>| ∈ [0, 1]</span>.</p>
 
 <p><b>Trajectory collection for black-box harnesses.</b> We run off-the-shelf harnesses as the policy's interface.</p>
 <ul>
