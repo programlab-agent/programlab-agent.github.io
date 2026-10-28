@@ -137,21 +137,20 @@ The certificate is at "./example.org.pem" and the key at "./example.org-key.pem"
     assert pem_block_types(cert_file) == ["CERTIFICATE"]
     assert pem_block_types(key_file) == ["PRIVATE KEY"]
     assert subject_alt_names(cert_file) == {("DNS", "example.org")}</code></pre></details>
-<p class="fine">It passes on the reference mkcert and fails on a dummy binary that accepts any input.</p>
+<p class="fine">It passes on the real mkcert and fails on a program that does nothing.</p>
 </div>
 
 <h3 id="why-rl">Why ProgramLab is suitable for RL</h3>
 <ul>
-<li><b>Tests you can trust.</b> A test is kept only if it passes on the real program, passes every time, and fails on a do-nothing binary. Tests that fail on the reference in the cleanroom (4,047), pass on a no-op binary (1,735), or are flaky (550) are excluded from scoring.</li>
-<li><b>Hard to cheat.</b> We keep ProgramBench's cleanroom: the agent can run the program but not read it, and scoring rebuilds the agent's program in a fresh container and runs tests it has never seen. Since every task comes from a new repository, we also scrub each image for leaks: source files, build caches, dependency sources, git history, and docs that describe internals. Before release, we check that only the execute-only binary remains, with no readable copy and no network. This matters more for RL than for evaluation, since a policy trained on tens of thousands of rollouts will exploit any loophole it finds.</li>
+<li><b>Tests you can trust.</b> A test is kept only if it passes on the real program, passes every time, and fails on an empty program that does nothing. Tests that the real program fails in the cleanroom (4,047), that the empty program passes (1,735), or that are flaky (550) are excluded from scoring.</li>
 <li><b>Cheap to score.</b> Coverage-guided generation keeps suites small: a median of 127 tests (ProgramBench uses 770) still covers 76.6% of the reference's code, so scoring thousands of rollouts per training step stays fast.</li>
-<li><b>Tasks at the right difficulty.</b> Tasks range from small tools to projects with over 100K lines of code: 205 easy, 888 medium, and 168 hard. This makes it easier to pick tasks that suit your agent: hard enough to learn from, but not out of reach. The spread also makes curricula simple: our multi-agent run trained 50 steps on easy tasks, then 50 on medium.</li>
+<li><b>Tasks at the right difficulty.</b> Tasks range from small tools to projects with over 100K lines of code: 205 easy, 888 medium, and 168 hard. This makes it easier to pick tasks that suit your agent: hard enough to learn from, but not out of reach. The spread also <b>makes curricula simple</b>: our multi-agent run trained 50 steps on easy tasks, then 50 on medium.</li>
 </ul>
 
 <p><b>How we build ProgramLab.</b> We collect open-source projects from package registries (Homebrew, <a href="http://crates.io">crates.io</a>, <a href="http://pkg.go.dev">pkg.go.dev</a>) and GitHub, and keep those that reliably build a standalone executable. For each task, Codex CLI with GPT-5.5 builds the environment in the three steps below, and a separate validator re-checks each step:</p>
 <ol>
 <li><b>Build the reference.</b> Compile the project's main executable and record the build script.</li>
-<li><b>Synthesize behavioral tests.</b> Probe the executable and write tests that assert on its observable effects. A test is kept only if it passes on the reference, passes on repeated runs, and fails on a dummy binary that accepts any input.
+<li><b>Synthesize behavioral tests.</b> Probe the executable and write tests that assert on its observable effects. A test is kept only if it passes on the reference, passes on repeated runs, and fails on an empty program that does nothing.
 <aside class="note">
 <b>Coverage-guided iteration.</b> After each round, we measure line coverage of the reference on an instrumented build and feed the coverage report back to the agent, which then writes tests for code that is not yet covered. The loop stops when coverage stops improving.
 </aside>
